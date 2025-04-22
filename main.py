@@ -12,10 +12,13 @@ if __name__ == "__main__":
     root.iconphoto(True, icon)
     rpc = init_discord()
     configure_theme()
+    
     app = ctk.CTk()
     app.geometry("600x500")
     app.title("Pixel Tools")
+    
     show_main_menu(app)
     app.mainloop()
-if rpc:
-    rpc.close()
+
+    if rpc:
+        rpc.close()

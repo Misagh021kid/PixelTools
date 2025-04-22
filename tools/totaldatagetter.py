@@ -1,14 +1,11 @@
 from mcstatus import JavaServer
-import dns.resolver
 import socket
 import time
 from datetime import datetime
-from utils.threading_util import threaded, typing_lock
-import geoip2.database
 import whois
-from mcstatus import JavaServer
-import socket
 import re
+from utils.threading_util import threaded, typing_lock
+
 
 def type_output(output_box, text, app):
     with typing_lock:
@@ -26,16 +23,6 @@ def type_output(output_box, text, app):
             time.sleep(0.2)
         output_box.configure(state="disabled")
 
-@threaded
-def check_status(host, output_box, app):
-    try:
-        server = JavaServer.lookup(host)
-        status = server.status()
-        motd = status.description.strip() if isinstance(status.description, str) else status.description.get("text", "")
-        text = f"[✔] Server is Online\n[✔] MOTD: {motd}\n[✔] Players: {status.players.online}/{status.players.max}\n[✔] Ping: {status.latency:.2f} ms"
-    except Exception as e:
-        text = f"[✖] Server Offline or Error:\n{str(e)}"
-    type_output(output_box, text, app)
 
 @threaded
 def scan_port(host, output_box, app):
@@ -57,6 +44,7 @@ def resolve_ip(host, output_box, app):
         text = f"[✖] IP Resolution Failed:\n{str(e)}"
     type_output(output_box, text, app)
 
+
 @threaded
 def reverse_dns(host, output_box, app):
     try:
@@ -67,6 +55,7 @@ def reverse_dns(host, output_box, app):
         text = f"[✖] Reverse DNS Failed:\n{str(e)}"
     type_output(output_box, text, app)
 
+
 @threaded
 def whois_lookup(host, output_box, app):
     try:
@@ -75,10 +64,11 @@ def whois_lookup(host, output_box, app):
     except Exception as e:
         text = f"[✖] WHOIS Lookup Failed:\n{str(e)}"
     type_output(output_box, text, app)
+
+
 @threaded
 def fast_scan(host, output_box, app):
     timestamp = datetime.now().strftime("%H:%M:%S")
-
     try:
         server = JavaServer.lookup(host)
         status = server.status()

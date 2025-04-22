@@ -1,7 +1,5 @@
 import customtkinter as ctk
-import re
 from tools.totaldatagetter import (
-    check_status,
     scan_port,
     resolve_ip,
     reverse_dns,
@@ -20,11 +18,12 @@ def open_mctools(app):
     for widget in app.winfo_children():
         widget.destroy()
 
-    back_btn = ctk.CTkButton(app, text="← Back", width=80, command=lambda: show_main_menu(app), font=("OpenSans", 14), fg_color="#2a2a2a", hover_color="#0088ff")
-    back_btn.place(x=10, y=10)
+    ctk.CTkButton(
+        app, text="← Back", width=80, command=lambda: show_main_menu(app),
+        font=("OpenSans", 14), fg_color="#2a2a2a", hover_color="#0088ff"
+    ).place(x=10, y=10)
 
-    label = ctk.CTkLabel(app, text="Pixel Tools (SV Info)", font=("OpenSans", 24))
-    label.pack(pady=15)
+    ctk.CTkLabel(app, text="Pixel Tools (SV Info)", font=("OpenSans", 24)).pack(pady=15)
 
     entry = ctk.CTkEntry(app, placeholder_text="play.example.com", width=300, font=("OpenSans", 14))
     entry.pack(pady=5)
@@ -39,7 +38,6 @@ def open_mctools(app):
     output_box.configure(state="disabled")
 
     buttons = [
-        ("Check Server Status", check_status),
         ("Scan Port 25565", scan_port),
         ("Resolve IP", resolve_ip),
         ("Reverse DNS", reverse_dns),

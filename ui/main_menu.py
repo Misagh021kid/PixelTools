@@ -18,7 +18,7 @@ def show_main_menu(app):
             start = time.time()
             urllib.request.urlopen("http://google.com", timeout=2)
             delay = time.time() - start
-            if delay < 0.3:
+            if delay < 0.5:
                 return "Good"
             else:
                 return "Poor Connection"
