@@ -1,7 +1,9 @@
 import socket
 import threading
+from utils.threading_util import threaded
 
-def easy_scan(host, update_output):
+@threaded
+def portscanner(host, output_box, app):
     open_ports = []
     start_port = 20
     end_port = 25565
@@ -9,7 +11,22 @@ def easy_scan(host, update_output):
     checked = 0
     lock = threading.Lock()
 
-    # پیام اولیه
+    def update_output(text):
+        output_box.configure(state="normal")
+        output_box.delete("1.0", "end")
+        output_box.insert("end", f"{text}\n")
+        output_box.see("end")
+        output_box.configure(state="disabled")
+        app.update()
+
+    def update_progress(text):
+        output_box.configure(state="normal")
+        output_box.delete("end-2l", "end-1l")  # حذف خط قبلی بار پیشرفت
+        output_box.insert("end", f"{text}\n")
+        output_box.see("end")
+        output_box.configure(state="disabled")
+        app.update()
+
     update_output(f"[+] Starting scan on {host}...")
 
     def scan_port(port):
@@ -25,7 +42,7 @@ def easy_scan(host, update_output):
                 checked += 1
                 percent = int((checked / total) * 100)
                 bar = '█' * (percent // 5) + '░' * (20 - (percent // 5))
-                update_output(f"[{bar} {percent}%] Scanning port {port}...")
+                update_progress(f"[{bar} {percent}%] Scanning port {port}...")
 
     threads = []
     for port in range(start_port, end_port + 1):
@@ -37,6 +54,6 @@ def easy_scan(host, update_output):
         t.join()
 
     if open_ports:
-        update_output(f"\n[+] Open ports on {host}: {', '.join(map(str, open_ports))}")
+        update_output(f"\n[✔] Open ports on {host}:\n{', '.join(map(str, open_ports))}")
     else:
-        update_output(f"\n[-] No open ports found on {host}.")
+        update_output(f"\n[✖] No open ports found on {host}.")

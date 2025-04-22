@@ -1,5 +1,6 @@
 import customtkinter as ctk
-from logic.penetration_tools import easy_scan
+from tools.portscanner import portscanner
+from tools.fakeproxy import fakeproxy
 import threading
 
 def open_penetration_page(app):
@@ -18,7 +19,7 @@ def open_penetration_page(app):
 
     btn_frame = ctk.CTkFrame(app, fg_color="#1a1a1a")
     btn_frame.pack(pady=15)
-    def run_easy_scan():
+    def run_portscanner():
         host = entry.get()
 
         def update_output(msg):
@@ -32,15 +33,14 @@ def open_penetration_page(app):
         output_box.insert("end", f"[+] Starting scan on {host}...\n")
         output_box.configure(state="disabled")
 
-        threading.Thread(target=lambda: easy_scan(host, update_output)).start()
+        threading.Thread(target=lambda: portscanner(host, update_output)).start()
 
 
 
 
     tools = [
-        ("Easy Scans", run_easy_scan),
-        ("Discovery Commands", lambda: dummy_output("Discovery started...")),
-        ("FakeProxy", lambda: dummy_output("FakeProxy initialized...")),
+        ("Easy Scans", run_portscanner),
+        ("FakeProxy", lambda: fakeproxy(entry.get(), output_box, app)),
         ("Plugin Exploits", lambda: dummy_output("Exploits deployed...")),
         ("Bots Attack", lambda: dummy_output("Bot attack simulation running..."))
     ]

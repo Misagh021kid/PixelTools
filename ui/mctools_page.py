@@ -1,11 +1,12 @@
 import customtkinter as ctk
 import re
-from logic.network_tools import (
+from tools.totaldatagetter import (
     check_status,
     scan_port,
     resolve_ip,
     reverse_dns,
-    whois_lookup
+    whois_lookup,
+    fast_scan
 )
 
 def open_mctools(app):
@@ -36,6 +37,7 @@ def open_mctools(app):
         ("Resolve IP", resolve_ip),
         ("Reverse DNS", reverse_dns),
         ("WHOIS Lookup", whois_lookup),
+        ("Fast Scan", fast_scan)
     ]
 
     for index, (text, command) in enumerate(buttons):

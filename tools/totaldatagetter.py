@@ -6,6 +6,9 @@ from datetime import datetime
 from utils.threading_util import threaded, typing_lock
 import geoip2.database
 import whois
+from mcstatus import JavaServer
+import socket
+import re
 
 def type_output(output_box, text, app):
     with typing_lock:
@@ -72,3 +75,35 @@ def whois_lookup(host, output_box, app):
     except Exception as e:
         text = f"[✖] WHOIS Lookup Failed:\n{str(e)}"
     type_output(output_box, text, app)
+@threaded
+def fast_scan(host, output_box, app):
+    timestamp = datetime.now().strftime("%H:%M:%S")
+
+    try:
+        server = JavaServer.lookup(host)
+        status = server.status()
+        motd = status.description
+        if isinstance(motd, dict):
+            motd = motd.get("text", "")
+        motd = re.sub(r'§[0-9a-fk-or]', '', motd, flags=re.IGNORECASE)
+
+        version = status.version.name
+        protocol = status.version.protocol
+        latency = status.latency
+
+        ip = socket.gethostbyname(host)
+
+        log = [
+            f"[{timestamp}] IP: {ip}:{25565}",
+            f"[{timestamp}] MOTD: {motd}",
+            f"[{timestamp}] Version: {version}",
+            f"[{timestamp}] PROTOCOL: {protocol}",
+            f"[{timestamp}] PING: {latency:.2f} ms",
+        ]
+
+        output = "\n".join(log)
+
+    except Exception as e:
+        output = f"[{timestamp}] Scan Failed:\n{str(e)}"
+
+    type_output(output_box, output, app)
