@@ -11,6 +11,12 @@ from tools.totaldatagetter import (
 
 def open_mctools(app):
     from ui.main_menu import show_main_menu
+
+    def check_entry(event=None):
+        state = "normal" if entry.get().strip() else "disabled"
+        for btn in buttons_refs:
+            btn.configure(state=state)
+
     for widget in app.winfo_children():
         widget.destroy()
 
@@ -22,6 +28,7 @@ def open_mctools(app):
 
     entry = ctk.CTkEntry(app, placeholder_text="play.example.com", width=300, font=("OpenSans", 14))
     entry.pack(pady=5)
+    entry.bind("<KeyRelease>", check_entry)
 
     frame = ctk.CTkFrame(app, fg_color="#1a1a1a")
     frame.pack(pady=10)
@@ -40,6 +47,7 @@ def open_mctools(app):
         ("Fast Scan", fast_scan)
     ]
 
+    buttons_refs = []
     for index, (text, command) in enumerate(buttons):
         row, col = divmod(index, 2)
         btn = ctk.CTkButton(
@@ -49,6 +57,8 @@ def open_mctools(app):
             width=180,
             font=("OpenSans", 13),
             fg_color="#2a2a2a",
-            hover_color="#0088ff"
+            hover_color="#0088ff",
+            state="disabled"
         )
         btn.grid(row=row, column=col, padx=10, pady=5)
+        buttons_refs.append(btn)

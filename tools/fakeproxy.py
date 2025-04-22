@@ -1,7 +1,7 @@
 import socket
 import threading
 from utils.threading_util import threaded
-import struct
+import time
 
 @threaded
 def fakeproxy(target_host, output_box, app):
@@ -13,35 +13,6 @@ def fakeproxy(target_host, output_box, app):
         output_box.see("end")
         output_box.configure(state="disabled")
         app.update()
-
-    def read_varint(data):
-        num = 0
-        for i in range(5):
-            byte = data[i]
-            num |= (byte & 0x7F) << (7 * i)
-            if not (byte & 0x80):
-                return num, i + 1
-        return 0, 0
-
-    def parse_packet(data, direction):
-        try:
-            length, offset = read_varint(data)
-            packet_id, pid_len = read_varint(data[offset:])
-            full_offset = offset + pid_len
-
-            # Check only in login state packets
-            if packet_id == 0x01 and direction == "Server → Client":
-                update_output("[SECURITY] Server → Client: Encryption Request (public key, verify token...)")
-            elif packet_id == 0x01 and direction == "Client → Server":
-                update_output("[SECURITY] Client → Server: Encryption Response (encrypted secret key...)")
-            elif packet_id == 0x00 and direction == "Client → Server":
-                update_output("[LOGIN] Client sent Login Start (username, etc.)")
-            elif packet_id == 0x02 and direction == "Server → Client":
-                update_output("[LOGIN] Server sent Login Success (UUID, username)")
-            elif packet_id == 0x03 and direction == "Server → Client":
-                update_output("[INFO] Server set compression threshold.")
-        except Exception as e:
-            update_output(f"[!] Error parsing packet: {e}")
 
     def handle_client(client_socket):
         try:
@@ -55,7 +26,7 @@ def fakeproxy(target_host, output_box, app):
                         data = source.recv(4096)
                         if not data:
                             break
-                        parse_packet(data, label)
+                        update_output(f"[>] {label}: {data[:30]}... ({len(data)} bytes)")
                         destination.sendall(data)
                     except Exception as e:
                         update_output(f"[!] Error forwarding {label}: {e}")

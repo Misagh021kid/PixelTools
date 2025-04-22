@@ -21,7 +21,7 @@ def portscanner(host, output_box, app):
 
     def update_progress(text):
         output_box.configure(state="normal")
-        output_box.delete("end-2l", "end-1l")  # حذف خط قبلی بار پیشرفت
+        output_box.delete("end-2l", "end-1l")
         output_box.insert("end", f"{text}\n")
         output_box.see("end")
         output_box.configure(state="disabled")
