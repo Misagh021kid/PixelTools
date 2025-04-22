@@ -4,13 +4,15 @@ import socket
 import time
 from datetime import datetime
 from utils.threading_util import threaded, typing_lock
+import geoip2.database
+import whois
 
 def type_output(output_box, text, app):
     with typing_lock:
         output_box.configure(state="normal")
         output_box.delete("1.0", "end")
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        header = f"MSC - {timestamp}\n(c) Misagh & ChatGPT | github.com/misaghx\n\n"
+        header = f"PXTOOL - {timestamp}\n(c) Misagh | github.com/misagh\n\n"
         output_box.insert("end", header)
         app.update()
         time.sleep(0.01)
@@ -42,12 +44,31 @@ def scan_port(host, output_box, app):
         text = f"[✖] Port {port} is CLOSED or FILTERED!"
     type_output(output_box, text, app)
 
+
 @threaded
-def dns_lookup(host, output_box, app):
+def resolve_ip(host, output_box, app):
     try:
-        result = dns.resolver.resolve(host, 'A')
-        ips = ", ".join([ip.to_text() for ip in result])
-        text = f"[✔] DNS Lookup for {host}:\n{ips}"
+        ip = socket.gethostbyname(host)
+        text = f"[✔] Resolved IP: {ip}"
     except Exception as e:
-        text = f"[✖] DNS Lookup Failed:\n{str(e)}"
+        text = f"[✖] IP Resolution Failed:\n{str(e)}"
+    type_output(output_box, text, app)
+
+@threaded
+def reverse_dns(host, output_box, app):
+    try:
+        ip = socket.gethostbyname(host)
+        hostname = socket.gethostbyaddr(ip)[0]
+        text = f"[✔] Reverse DNS:\n{hostname}"
+    except Exception as e:
+        text = f"[✖] Reverse DNS Failed:\n{str(e)}"
+    type_output(output_box, text, app)
+
+@threaded
+def whois_lookup(host, output_box, app):
+    try:
+        w = whois.whois(host)
+        text = f"[✔] WHOIS Info:\nDomain: {w.domain_name}\nRegistrar: {w.registrar}\nCreation: {w.creation_date}"
+    except Exception as e:
+        text = f"[✖] WHOIS Lookup Failed:\n{str(e)}"
     type_output(output_box, text, app)
