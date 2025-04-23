@@ -12,8 +12,6 @@ def portscanner(host, output_box, app):
     total = end_port - start_port + 1
     checked = 0
     lock = threading.Lock()
-    entry = ctk.CTkEntry(app, placeholder_text="play.example.com", width=300, font=("OpenSans", 14))
-    entry.pack(pady=5)
     def update_output(text):
         output_box.configure(state="normal")
         output_box.delete("1.0", "end")
@@ -32,7 +30,6 @@ def portscanner(host, output_box, app):
 
     update_output(f"[+] Starting scan on {host}...")
     def run_portscanner():
-            host = entry.get()
             output_box.configure(state="normal")
             output_box.delete("1.0", "end")
             output_box.insert("end",generate_header(), f"[+] Starting scan on {host}...\n")

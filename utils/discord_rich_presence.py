@@ -8,7 +8,7 @@ def init_discord():
         rpc = Presence(CLIENT_ID)
         rpc.connect()
         rpc.update(
-            state="Version 0.0.1",
+            state="Version 0.0.2",
             details="Pentesting for MC Servers",
             start=time.time(),
             large_image="pixeltools",

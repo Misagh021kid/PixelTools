@@ -121,7 +121,7 @@ def show_main_menu(app):
     status_bar = ctk.CTkFrame(app, height=30, fg_color="transparent")
     status_bar.pack(side="bottom", fill="x", pady=5, padx=10)
 
-    version_label = ctk.CTkLabel(status_bar, text="v0.0.1", font=("OpenSans", 12))
+    version_label = ctk.CTkLabel(status_bar, text="v0.0.2", font=("OpenSans", 12))
     version_label.pack(side="left")
 
     internet_frame = ctk.CTkFrame(status_bar, fg_color="transparent")
