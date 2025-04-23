@@ -12,7 +12,7 @@ def type_output(output_box, text, app):
         output_box.configure(state="normal")
         output_box.delete("1.0", "end")
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        header = f"PXTOOL - {timestamp}\n(c) Misagh | github.com/misagh\n\n"
+        header = f"PXTOOL - {timestamp}\n(c) Misagh | github.com/misagh021kid\n\n"
         output_box.insert("end", header)
         app.update()
         time.sleep(0.01)

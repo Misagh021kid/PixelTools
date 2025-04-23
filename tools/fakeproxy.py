@@ -3,6 +3,7 @@ import threading
 from utils.threading_util import threaded
 import time
 
+
 @threaded
 def fakeproxy(target_host, output_box, app):
     FAKEPROXY_PORT = 25565

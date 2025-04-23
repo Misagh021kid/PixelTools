@@ -46,7 +46,6 @@ def open_penetration_page(app):
     tools = [
         ("Port Scanner", run_portscanner),
         ("FakeProxy", lambda: fakeproxy(entry.get(), output_box, app)),
-        ("Server Chart", lambda: dummy_output("Exploits deployed...")),
         ("Bots Attack", lambda: bot_attack(entry.get(), output_box, app)),
     ]
 
