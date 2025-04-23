@@ -13,6 +13,7 @@ required_packages = [
     "requests",
     "mcstatus",
     "whois",
+    "pyinstaller",
 ]
 
 builtin_modules = [
@@ -47,13 +48,13 @@ def check_and_install():
 
 def build_exe():
     print("[🚀] Building the project to EXE using PyInstaller...")
-    install_package("pyinstaller")
     subprocess.call([
         "pyinstaller",
         "--noconfirm",
         "--onefile",
         "--windowed",
         "--name", "PixelTools",
+        "--icon", "assets/icon.ico",
         "main.py"
     ])
     print("[✅] Build completed! Check the /dist folder for your executable.")
