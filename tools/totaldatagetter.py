@@ -5,6 +5,7 @@ from datetime import datetime
 import whois
 import re
 from utils.threading_util import threaded, typing_lock
+import dns.resolver, dns.reversename
 
 
 def type_output(output_box, text, app):
@@ -49,10 +50,16 @@ def resolve_ip(host, output_box, app):
 def reverse_dns(host, output_box, app):
     try:
         ip = socket.gethostbyname(host)
-        hostname = socket.gethostbyaddr(ip)[0]
-        text = f"[✔] Reverse DNS:\n{hostname}"
+        rev_name = dns.reversename.from_address(ip)
+        try:
+            answers = dns.resolver.resolve(rev_name, "PTR")
+            hostname = str(answers[0]).rstrip('.')
+            text = f"[✔] Reverse DNS: {hostname}"
+        except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
+            text = f"[ℹ] No PTR record for IP {ip}"
     except Exception as e:
-        text = f"[✖] Reverse DNS Failed:\n{str(e)}"
+        text = f"[✖] Reverse DNS Failed:\n{e}"
+    
     type_output(output_box, text, app)
 
 

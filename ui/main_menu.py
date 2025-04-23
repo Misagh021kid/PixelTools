@@ -54,7 +54,7 @@ def show_main_menu(app):
                     return lambda: append_console("\n[!] No releases found on GitHub.\n")
 
                 latest_version = response["tag_name"]
-                current_version = "v0.0.2"
+                current_version = "v0.0.3"
 
                 if latest_version != current_version:
                     download_url = next(asset["browser_download_url"]
@@ -102,7 +102,7 @@ def show_main_menu(app):
     title.pack(pady=40)
 
     mctool_btn = ctk.CTkButton(app, text="Minecraft Server Info", command=lambda: open_mctools(app),
-                               width=250, height=40, font=("OpenSans", 13), fg_color="#2a2a2a", hover_color="#0088ff")
+    width=250, height=40, font=("OpenSans", 13), fg_color="#2a2a2a", hover_color="#0088ff")
     mctool_btn.pack(pady=10)
 
     pentest_btn = ctk.CTkButton(app, text="Minecraft Pentest", command=lambda: open_penetration_page(app),
@@ -120,7 +120,7 @@ def show_main_menu(app):
     status_bar = ctk.CTkFrame(app, height=30, fg_color="transparent")
     status_bar.pack(side="bottom", fill="x", pady=5, padx=10)
 
-    version_label = ctk.CTkLabel(status_bar, text="v0.0.2", font=("OpenSans", 12))
+    version_label = ctk.CTkLabel(status_bar, text="v0.0.3", font=("OpenSans", 12))
     version_label.pack(side="left")
 
     internet_frame = ctk.CTkFrame(status_bar, fg_color="transparent")
@@ -130,20 +130,20 @@ def show_main_menu(app):
     net_label.pack(side="left", padx=5)
 
     refresh_btn = ctk.CTkButton(internet_frame, text="⟳", width=30, height=24, font=("OpenSans", 14),
-                                 command=update_internet_status, fg_color="#2a2a2a", hover_color="#0088ff")
+    command=update_internet_status, fg_color="#2a2a2a", hover_color="#0088ff")
     refresh_btn.pack(side="left")
 
     update_internet_status()
 
     console_box = ctk.CTkTextbox(app, height=120, width=550, font=("JetBrains Mono", 12),
-                                 fg_color="#0e1116", text_color="#33ff66")
+    fg_color="#0e1116", text_color="#33ff66")
     console_box.pack(pady=25)
     console_box.insert(ctk.END, sysinfo)
     console_box.configure(state="disabled")
 
     update_btn = ctk.CTkButton(app, text="Check for Updates", command=check_for_updates,
-                               width=200, height=30, font=("OpenSans", 12),
-                               fg_color="#2a2a2a", hover_color="#00bb66")
+    width=200, height=30, font=("OpenSans", 12),
+    fg_color="#2a2a2a", hover_color="#00bb66")
     update_btn.pack(pady=(0, 5))
 
     github_icon = ctk.CTkLabel(app, text="⭐", font=("OpenSans", 20), cursor="hand2")
