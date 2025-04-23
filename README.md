@@ -13,6 +13,10 @@
 - 🧾 **WHOIS Lookup** for server/domain information
 - 🤖 **Bot Attack**
 - 🕸️ **Fake Proxy Flood**
+## 🖼 Some Images:
+![image](https://github.com/user-attachments/assets/ce9dc2f6-1bef-4a16-af49-2f516ef1459b)
+![image](https://github.com/user-attachments/assets/66b538fa-18dc-442e-91ce-8837574d0e3d)
+![image](https://github.com/user-attachments/assets/2296e1fa-4eae-4018-a921-1e0e49c8b981)
 
 ---
 
@@ -51,7 +55,7 @@ python build.py
 ```
 ---
 
-🛟 Support & Feedback
+💠 Support & Feedback
 If you encounter bugs, feature requests, or want to contribute:
 
 📧 Email: misaghalivi@gmail.com
