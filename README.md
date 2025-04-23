@@ -18,6 +18,7 @@
 
 ## 💾 Requirements for Running
 
+- 💨 Windows 10 or Higher
 - ✅ **Operating System**: Windows 10 / 11 (64-bit)
 - ❗ No Python installation required for `.exe` version
 - 🧠 RAM: Minimum 512MB, Recommended 1GB+
@@ -47,3 +48,16 @@ Make sure to add Python to PATH.
 
 ```bash
 python build.py
+
+---
+
+🛟 Support & Feedback
+If you encounter bugs, feature requests, or want to contribute:
+
+📧 Email: misaghalivi@gmail.com
+📂 GitHub Issues: [Open an Issue](https://github.com/Misagh021Kid/PixelTools/issues)
+🔌 Discord: f35j#0000 or [Join Server](https://discord.gg/dJ8exMjuKe)
+
+---
+
+Made with ❤️ by Misagh | 2025
