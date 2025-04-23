@@ -48,7 +48,7 @@ Make sure to add Python to PATH.
 
 ```bash
 python build.py
-
+```
 ---
 
 🛟 Support & Feedback
