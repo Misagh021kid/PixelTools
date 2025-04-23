@@ -1,12 +1,15 @@
 import customtkinter as ctk
 from ui.penetration_page import open_penetration_page
-import urllib.request
 from ui.mctools_page import open_mctools
+import urllib.request
 import webbrowser
 import platform
 import socket
 import time
 import threading
+import requests
+import os
+import sys
 
 
 def show_main_menu(app):
@@ -41,6 +44,54 @@ def show_main_menu(app):
 
         threading.Thread(target=check, daemon=True).start()
 
+    def check_for_updates():
+        try:
+            response = requests.get("https://api.github.com/repos/Misagh021kid/Pixeltools/releases/latest").json()
+
+            if "tag_name" not in response:
+                console_box.configure(state="normal")
+                console_box.insert(ctk.END, "\n[!] No releases found on GitHub.\n")
+                console_box.configure(state="disabled")
+                return
+
+            latest_version = response["tag_name"]
+            current_version = "v0.0.1"
+
+            if latest_version != current_version:
+                download_url = next(asset["browser_download_url"]
+                                    for asset in response["assets"]
+                                    if asset["name"].endswith(".exe"))
+
+                console_box.configure(state="normal")
+                console_box.insert(ctk.END, f"\n[+] New version available: {latest_version}. Downloading update...\n")
+                console_box.configure(state="disabled")
+
+                r = requests.get(download_url, stream=True)
+                with open("PixelTools_new.exe", "wb") as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        f.write(chunk)
+
+                console_box.configure(state="normal")
+                console_box.insert(ctk.END, "[+] Update downloaded. Replacing current file...\n")
+                console_box.configure(state="disabled")
+
+                new_file = os.path.abspath("PixelTools_new.exe")
+                old_file = sys.argv[0]
+
+                os.remove(old_file)
+                os.rename(new_file, old_file)
+                os.execv(old_file, sys.argv)
+            else:
+                console_box.configure(state="normal")
+                console_box.insert(ctk.END, "\n[✓] You already have the latest version.\n")
+                console_box.configure(state="disabled")
+
+        except Exception as e:
+            console_box.configure(state="normal")
+            console_box.insert(ctk.END, f"\n[!] Update check failed: {e}\n")
+            console_box.configure(state="disabled")
+
+
     title = ctk.CTkLabel(app, text="Pixel Tools (Main Menu)", font=("OpenSans", 26))
     title.pack(pady=40)
 
@@ -49,6 +100,7 @@ def show_main_menu(app):
 
     pentest_btn = ctk.CTkButton(app, text="Minecraft Pentest", command=lambda: open_penetration_page(app), width=250, height=40, font=("OpenSans", 13), fg_color="#2a2a2a", hover_color="#0088ff")
     pentest_btn.pack(pady=10)
+
     sysinfo = f"""
     [+] System Info
     Platform: {platform.system()} {platform.release()}
@@ -56,6 +108,7 @@ def show_main_menu(app):
     Hostname: {socket.gethostname()}
     IP: {socket.gethostbyname(socket.gethostname())}
     """.strip()
+
     status_bar = ctk.CTkFrame(app, height=30, fg_color="transparent")
     status_bar.pack(side="bottom", fill="x", pady=5, padx=10)
 
@@ -77,6 +130,12 @@ def show_main_menu(app):
     console_box.pack(pady=25)
     console_box.insert(ctk.END, sysinfo)
     console_box.configure(state="disabled")
+
+    update_btn = ctk.CTkButton(app, text="Check for Updates", command=check_for_updates,
+    width=200, height=30, font=("OpenSans", 12),
+    fg_color="#2a2a2a", hover_color="#00bb66")
+    update_btn.pack(pady=(0, 5))
+
     github_icon = ctk.CTkLabel(app, text="⭐", font=("OpenSans", 20), cursor="hand2")
     github_icon.place(relx=1.0, rely=1.0, x=-40, y=-10, anchor="se")
     github_icon.bind("<Button-1>", lambda e: webbrowser.open("https://github.com/misagh021kid/Pixeltools"))

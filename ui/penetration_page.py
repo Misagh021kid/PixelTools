@@ -6,9 +6,9 @@ from tools.botflood import bot_attack
 
 def open_penetration_page(app):
     from ui.main_menu import show_main_menu
+
     for widget in app.winfo_children():
         widget.destroy()
-
     ctk.CTkButton(
         app, text="← Back", width=80, font=("OpenSans", 14),
         fg_color="#2a2a2a", hover_color="#2a2a2a",
@@ -29,19 +29,22 @@ def open_penetration_page(app):
         output_box.insert("end", msg + "\n")
         output_box.configure(state="disabled")
 
+    def check_entry(event=None):
+        state = "normal" if entry.get().strip() else "disabled"
+        for btn in buttons_refs:
+            btn.configure(state=state)
+
+    entry.bind("<KeyRelease>", check_entry)
+
     def run_portscanner():
         host = entry.get()
+        if not host.strip():
+            return
         output_box.configure(state="normal")
         output_box.delete("1.0", "end")
         output_box.insert("end", f"[+] Starting scan on {host}...\n")
         output_box.configure(state="disabled")
         threading.Thread(target=lambda: portscanner(host, output_box, app)).start()
-
-    def dummy_output(msg):
-        output_box.configure(state="normal")
-        output_box.delete("1.0", "end")
-        output_box.insert("end", f"[✔] {msg}")
-        output_box.configure(state="disabled")
 
     tools = [
         ("Port Scanner", run_portscanner),
@@ -49,13 +52,16 @@ def open_penetration_page(app):
         ("Bots Attack", lambda: bot_attack(entry.get(), output_box, app)),
     ]
 
+    buttons_refs = []
     for i, (name, cmd) in enumerate(tools):
-        ctk.CTkButton(
+        btn = ctk.CTkButton(
             btn_frame, text=name, command=cmd, width=200,
-            font=("OpenSans", 13), fg_color="#2a2a2a", hover_color="#0088ff"
-        ).grid(row=i, column=0, padx=10, pady=5)
+            font=("OpenSans", 13), fg_color="#2a2a2a", hover_color="#0088ff",
+            state="disabled"
+        )
+        btn.grid(row=i, column=0, padx=10, pady=5)
+        buttons_refs.append(btn)
 
-    global output_box
     output_box = ctk.CTkTextbox(
         app, height=200, width=550, font=("JetBrains Mono", 12),
         fg_color="#0e1116", text_color="#33ff66"
