@@ -54,7 +54,7 @@ def show_main_menu(app):
                     return lambda: append_console("\n[!] No releases found on GitHub.\n")
 
                 latest_version = response["tag_name"]
-                current_version = "v0.0.1"
+                current_version = "v0.0.2"
 
                 if latest_version != current_version:
                     download_url = next(asset["browser_download_url"]
@@ -98,7 +98,6 @@ def show_main_menu(app):
 
         threading.Thread(target=thread_task, daemon=True).start()
 
-    # UI Elements
     title = ctk.CTkLabel(app, text="Pixel Tools (Main Menu)", font=("OpenSans", 26))
     title.pack(pady=40)
 
