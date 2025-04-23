@@ -17,4 +17,3 @@ def init_discord():
         return rpc
     except Exception as e:
         print("Discord Rich Presence unavailable:", e)
-        return None
